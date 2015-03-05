@@ -41,8 +41,7 @@ cluster_name=ceph
 mkdir -p /var/lib/ceph/osd/$cluster_name-$osd_num
 
 ceph-osd -i $osd_num --mkfs --mkkey
-ceph auth add osd.$osd_num osd 'allow *' mon 'allow profile osd' -i
-/var/lib/ceph/osd/$cluster_name-$osd_num/keyring
+ceph auth add osd.$osd_num osd 'allow *' mon 'allow profile osd' -i /var/lib/ceph/osd/$cluster_name-$osd_num/keyring
 ceph osd crush add-bucket $(hostname) host
 ceph osd crush move $(hostname) root=default
 ceph osd crush add osd.$osd_num 1.0 host=$(hostname)
