@@ -35,7 +35,7 @@ ceph-mon --mkfs -i $hostname --monmap /tmp/monmap --keyring /tmp/ceph.mon.keyrin
 
 touch /var/lib/ceph/mon/ceph-$hostname/done
 touch /var/lib/ceph/mon/ceph-$hostname/sysvinit
-/etc/init.d/ceph start mon.$hostname
+service ceph start mon.$hostname
 while ! ceph mon stat 2>/dev/null; do
 	sleep 1
 done
