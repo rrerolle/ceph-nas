@@ -20,20 +20,20 @@ cat << EOF > /etc/ceph/ceph.conf
 EOF
 
 ceph-authtool --create-keyring /tmp/ceph.mon.keyring --gen-key -n mon. --cap mon 'allow *'
-echo "[client.admin]" > /tmp/ceph.admin.keyring
-grep "key = " /tmp/ceph.mon.keyring >> /tmp/ceph.admin.keyring
-ceph auth import -i /tmp/ceph.admin.keyring
-mv /tmp/ceph.admin.keyring /etc/ceph/ceph.client.admin.keyring
 
 monmaptool --create --add $hostname $ipaddr --fsid $fsid /tmp/monmap
 
 mkdir /var/lib/ceph/mon/ceph-$hostname
-ceph-mon --mkfs -i $hostname --monmap /tmp/monmap --keyring /tmp/ceph.mon.keyring 
+ceph-mon --mkfs -i $hostname --monmap /tmp/monmap --keyring /tmp/ceph.mon.keyring
 
 touch /var/lib/ceph/mon/ceph-$hostname/done
 touch /var/lib/ceph/mon/ceph-$hostname/sysvinit
 /etc/init.d/ceph start mon.$hostname
 
+echo "[client.admin]" > /tmp/ceph.admin.keyring
+grep "key = " /tmp/ceph.mon.keyring >> /tmp/ceph.admin.keyring
+ceph auth import -i /tmp/ceph.admin.keyring
+mv /tmp/ceph.admin.keyring /etc/ceph/ceph.client.admin.keyring
 
 mkdir /home/osd
 ceph-disk prepare --cluster ceph --cluster-uuid $fsid --fs-type ext4 /home/osd
