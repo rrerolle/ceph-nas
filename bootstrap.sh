@@ -29,6 +29,9 @@ ceph-mon --mkfs -i $hostname --monmap /tmp/monmap --keyring /tmp/ceph.mon.keyrin
 touch /var/lib/ceph/mon/ceph-$hostname/done
 touch /var/lib/ceph/mon/ceph-$hostname/sysvinit
 /etc/init.d/ceph start mon.$hostname
+while ! ceph mon stat; do
+        sleep 1
+done
 
 echo "[client.admin]" > /tmp/ceph.admin.keyring
 grep "key = " /tmp/ceph.mon.keyring >> /tmp/ceph.admin.keyring
@@ -38,5 +41,3 @@ mv /tmp/ceph.admin.keyring /etc/ceph/ceph.client.admin.keyring
 mkdir /home/osd
 ceph-disk prepare --cluster ceph --cluster-uuid $fsid --fs-type ext4 /home/osd
 ceph-disk activate /home/osd
-
-
