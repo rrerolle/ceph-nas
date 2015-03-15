@@ -36,9 +36,7 @@ ceph-mon --mkfs -i $hostname --monmap /tmp/monmap --keyring /tmp/ceph.mon.keyrin
 touch /var/lib/ceph/mon/ceph-$hostname/done
 touch /var/lib/ceph/mon/ceph-$hostname/sysvinit
 service ceph start mon.$hostname
-while ! ceph mon stat 2>/dev/null; do
-	sleep 1
-done
+ceph mon stat
 
 ceph auth import -i /tmp/ceph.admin.keyring
 mv /tmp/ceph.admin.keyring /etc/ceph/ceph.client.admin.keyring
