@@ -49,9 +49,7 @@ printf "size=%.2fTB weight=%.2f\n" $size $weight
 
 ceph-osd -i $osd_num --mkfs --mkkey
 ceph auth add osd.$osd_num osd 'allow *' mon 'allow profile osd' -i /var/lib/ceph/osd/$cluster_name-$osd_num/keyring
-ceph osd crush add-bucket $(hostname) host
-ceph osd crush move $(hostname) root=default
-ceph osd crush add osd.$osd_num $weight host=$(hostname)
+ceph osd crush create-or-move -- osd.$osd_num $weight $(ceph-crush-location)
 touch /var/lib/ceph/osd/$cluster_name-$osd_num/done
 touch /var/lib/ceph/osd/$cluster_name-$osd_num/sysvinit
 /etc/init.d/ceph start osd.$osd_num
